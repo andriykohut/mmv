@@ -27,6 +27,9 @@ def get_tag(dirname):
                 media_files.append(mf)
             except Exception as e:
                 errors.append(DetectionError(child, e))
+    if not media_files and child_dirs:
+        print("No media files found in source dir, trying nested directory")
+        return get_tag(child_dirs[0])
     return media_files, child_dirs, errors
 
 
@@ -63,7 +66,7 @@ def main():
     dest_root = Path(args.dest) if args.dest else Path(args.source).parent
     dest_dir = dest_root.joinpath(dest_dir_name)
     if not (media_files or errors):
-        print("Notthing to move")
+        print("Nothing to move")
         sys.exit(1)
     if (not media_files) and errors:
         print("Unsuported media files?")
